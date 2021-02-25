@@ -74,6 +74,7 @@ const getElementOffset = (boardRef) => {
 };
 
 const Grid = ({}) => {
+    let [dragging, setDragging] = useState(false)
   let boardRef = useRef(null);
 
   let [isRunning, setRunning] = useState(false),
@@ -86,7 +87,6 @@ const Grid = ({}) => {
 
   useEffect(() => {
     BOARD = makeEmptyBoard(rows, cols);
-    console.log("RESIZING", BOARD.length);
   }, [cols, rows]);
 
   const makeCells = (rows, cols) => {
@@ -102,7 +102,8 @@ const Grid = ({}) => {
   };
   let [cells, setCells] = useState([]);
 
-  const handleClick = (event) => {
+
+  const toggleCells = (event) => {
     const elemOffset = getElementOffset(boardRef);
     const offsetX = event.clientX - elemOffset.x;
     const offsetY = event.clientY - elemOffset.y;
@@ -114,6 +115,15 @@ const Grid = ({}) => {
       BOARD[y][x] = !BOARD[y][x];
     }
     setCells(makeCells(rows, cols));
+
+  }
+  const handleMouseMove = (event) => {
+    if (event.shiftKey) toggleCells(event)
+  }
+
+
+  const handleClick = (event) => {
+    toggleCells(event)
   };
 
   const runGame = () => {
@@ -188,9 +198,9 @@ const Grid = ({}) => {
           style={{
             width: size * CELL_SIZE,
             height: size * CELL_SIZE,
-            backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`,
           }}
           onClick={handleClick}
+          onMouseMove={handleMouseMove}
           ref={boardRef}
         >
           {BOARD.map((row, i) =>
