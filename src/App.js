@@ -1,16 +1,6 @@
 import "./App.css";
 import Grid from "./grid";
 
-function Board() {
-  const row = 10,
-    col = 10;
-
-  const cells = new Array(row * col)
-    .fill(0)
-    .map((d) => <div className="cell"></div>);
-  return <div className="h-64 grid grid-rows-3 grid-flow-col">{cells}</div>;
-}
-
 function App() {
   return (
     <div className="bg-gray-100">
