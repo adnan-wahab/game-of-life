@@ -1,6 +1,6 @@
 # game-of-life
 
-Deployed Link [http://adnanwahab.com/game-of-life/build/]
+Deployed Link [http://adnanwahab.com/game-of-life/]
 Source Code [https://github.com/adnan-wahab/game-of-life]
  
 - [x] A stylish header above the game board.
