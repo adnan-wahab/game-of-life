@@ -10,10 +10,10 @@ const Cell = ({ x, y, filled, speed }) => {
     <div
       className={(filled ? "cell" : "empty") + " transition"}
       style={{
-        left: `${CELL_SIZE * x + 1}px`,
-        top: `${CELL_SIZE * y + 1}px`,
-        width: `${CELL_SIZE - 1}px`,
-        height: `${CELL_SIZE - 1}px`,
+        // left: `${CELL_SIZE * x + 1}px`,
+        // top: `${CELL_SIZE * y + 1}px`,
+        // width: `${CELL_SIZE - 1}px`,
+        // height: `${CELL_SIZE - 1}px`,
         transitionDuration: speed + "ms",
       }}
     />
@@ -113,7 +113,6 @@ const Grid = ({}) => {
     if (x >= 0 && x <= cols && y >= 0 && y <= rows) {
       BOARD[y][x] = !BOARD[y][x];
     }
-    console.log(x,y, cells)
     setCells(makeCells(rows, cols));
   };
 
@@ -124,10 +123,9 @@ const Grid = ({}) => {
 
   const stopGame = () => {
     setRunning(false);
-    console.log(TIMEOUT);
     if (TIMEOUT) {
       window.clearTimeout(TIMEOUT);
-      TIMEOUT = null;
+      TIMEOUT = void 0;
     }
   };
 
@@ -138,15 +136,9 @@ const Grid = ({}) => {
       for (let x = 0; x < cols; x++) {
         let neighbors = calculateNeighbors(BOARD, x, y, rows, cols);
         if (BOARD[y][x]) {
-          if (neighbors === 2 || neighbors === 3) {
-            newBoard[y][x] = true;
-          } else {
-            newBoard[y][x] = false;
-          }
+            newBoard[y][x] = neighbors === 2 || neighbors === 3
         } else {
-          if (!BOARD[y][x] && neighbors === 3) {
-            newBoard[y][x] = true;
-          }
+            newBoard[y][x] = !BOARD[y][x] && neighbors === 3
         }
       }
     }
