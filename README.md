@@ -14,3 +14,9 @@
 
 Grid.js implements the gameboard and controls
 Controls and grid could be split up into two different components and use a context to share Board State 
+
+to run project
+```
+yarn install
+yarn start 
+```
