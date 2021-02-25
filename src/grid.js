@@ -224,7 +224,7 @@ const Grid = ({}) => {
             {" "}
             Speed
             <input
-              className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128"
+              className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128 mx-5"
               type="range"
               min="10"
               max="1000"
