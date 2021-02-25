@@ -94,7 +94,7 @@ const Grid = ({}) => {
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         if (BOARD[y][x]) {
-          cells[`${x}${y}`] = true;
+          cells[`${x},${y}`] = true;
         }
       }
     }
@@ -113,6 +113,7 @@ const Grid = ({}) => {
     if (x >= 0 && x <= cols && y >= 0 && y <= rows) {
       BOARD[y][x] = !BOARD[y][x];
     }
+    console.log(x,y, cells)
     setCells(makeCells(rows, cols));
   };
 
@@ -205,7 +206,7 @@ const Grid = ({}) => {
               return (
                 <Cell
                   speed={speed * 3}
-                  filled={cells[`${i}${j}`]}
+                  filled={cells[`${i},${j}`]}
                   x={i}
                   y={j}
                   key={`${i},${j}`}
