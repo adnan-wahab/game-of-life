@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Game.css";
-import { CSSTransitionGroup } from "react-transition-group"; // ES6
 
 const CELL_SIZE = 20;
+let BOARD;
+let TIMEOUT;
 
 const Cell = ({ x, y, filled, speed }) => {
   return (
@@ -30,9 +31,6 @@ const makeEmptyBoard = (rows, cols) => {
 
   return board;
 };
-
-let BOARD;
-let TIMEOUT;
 
 const calculateNeighbors = (board, x, y, rows, cols) => {
   let neighbors = 0;
@@ -89,7 +87,7 @@ const Grid = ({}) => {
   useEffect(() => {
     BOARD = makeEmptyBoard(rows, cols);
     console.log("RESIZING", BOARD.length);
-  }, [size]);
+  }, [cols, rows]);
 
   const makeCells = (rows, cols) => {
     let cells = [];
@@ -179,7 +177,7 @@ const Grid = ({}) => {
     setCells(makeCells(rows, cols));
   };
   const handleResize = () => {
-    const height = window.innerHeight - 70; //APPBAR HEIGHT - caluclate dynamically using offsetHeight
+    const height = window.innerHeight - 55; //APPBAR HEIGHT - caluclate dynamically using offsetHeight
     setSize((height / CELL_SIZE) | 0);
   };
 
@@ -220,22 +218,30 @@ const Grid = ({}) => {
 
       <aside className="lg:block lg:flex-shrink-0 lg:order-first">
         <div className="h-full relative flex flex-col w-96 border-r border-gray-200 bg-gray-100 p-4">
-          <label>
-            {" "}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
             Speed
+            </label>
+            <div className="mt-1">
+
             <input
-              className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128 mx-5"
+              className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128"
               type="range"
               min="10"
               max="1000"
               value={speed}
               onChange={handleIntervalChange}
             />
-            {speed}ms
-          </label>
-          <label>
-            {" "}
+            {" " + speed}ms
+            </div>
+            </div>
+
+            <div>
+
+          <label className="block text-sm font-medium text-gray-700">
             Size
+            </label>
+            <div className="mt-1">
             <input
               className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128"
               min="10"
@@ -245,7 +251,9 @@ const Grid = ({}) => {
               onChange={handleSizeChange}
             />
             {size}
-          </label>
+            </div>
+            </div>
+
 
           {isRunning ? (
             <button className={buttonClass} onClick={stopGame}>
