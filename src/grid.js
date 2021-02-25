@@ -10,10 +10,10 @@ const Cell = ({ x, y, filled, speed }) => {
     <div
       className={(filled ? "cell" : "empty") + " transition"}
       style={{
-        left: `${CELL_SIZE * x + 1}px`,
-        top: `${CELL_SIZE * y + 1}px`,
-        width: `${CELL_SIZE - 1}px`,
-        height: `${CELL_SIZE - 1}px`,
+        // left: `${CELL_SIZE * x + 1}px`,
+        // top: `${CELL_SIZE * y + 1}px`,
+        // width: `${CELL_SIZE - 1}px`,
+        // height: `${CELL_SIZE - 1}px`,
         transitionDuration: speed + "ms",
       }}
     />
