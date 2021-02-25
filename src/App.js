@@ -3,8 +3,8 @@ import Grid from "./grid";
 
 function App() {
   return (
-    <div className="bg-gray-100">
-      <nav className="bg-gradient-to-r from-light-blue-800 to-cyan-600">
+    <div className="bg-gray-100 shadow overflow-hidden sm:rounded-lg">
+      <nav className="bg-gradient-to-r from-light-blue-800 to-cyan-600 px-4 py-5 sm:px-6">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
             <div className="flex items-center px-2 lg:px-0">
