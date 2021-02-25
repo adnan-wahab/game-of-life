@@ -1,7 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
 import Grid from './grid'
-
 
 function Board ( ) {
   const row = 10, col = 10;

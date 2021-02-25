@@ -3,16 +3,15 @@ import './Game.css';
 import { CSSTransitionGroup } from 'react-transition-group' // ES6
 
 const CELL_SIZE = 20;
-const WIDTH = 800;
-const HEIGHT = 600;
 
-const Cell = ({ x, y }) => {
+const Cell = ({ x, y, filled, speed}) => {
     return (
-        <div className="Cell" style={{
+        <div className={(filled ? 'cell' : 'empty') + ' transition'} style={{
             left: `${CELL_SIZE * x + 1}px`,
             top: `${CELL_SIZE * y + 1}px`,
             width: `${CELL_SIZE - 1}px`,
             height: `${CELL_SIZE - 1}px`,
+            transitionDuration: speed + 'ms'
         }} />
     );
 }
@@ -25,37 +24,12 @@ const makeEmptyBoard = (rows, cols) => {
             board[y][x] = false;
         }
     }
-    window.board = BOARD
 
     return board;
 }
 
-const wrapAround = (index, length) => {
-    if (index === -1) {
-      return length - 1;
-    } else if (index === length) {
-      return 0;
-    } else {
-      return index;
-    }
-  }
-
 let BOARD
 let TIMEOUT
-
-const makeCells= (rows, cols) => {
-    let cells = [];
-    console.log(rows, cols)
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-            if (BOARD[y][x]) {
-                cells.push({ x, y });
-            }
-        }
-    }
-
-    return cells;
-}
 
 const calculateNeighbors = (board, x, y, rows, cols) => {
     let neighbors = 0;
@@ -94,7 +68,7 @@ const Grid = ({}) => {
 
     let [isRunning, setRunning] = useState(false),
         [speed, setSpeed] = useState(100),
-        [size, setSize]  = useState(50)
+        [size, setSize]  = useState(30)
 
     const rows = size,cols = size;
     BOARD = BOARD || makeEmptyBoard(rows, cols);
@@ -104,7 +78,18 @@ const Grid = ({}) => {
         console.log('RESIZING', BOARD.length)
     }, [size])
 
-    let [cells, setCells] = useState(makeCells(rows, cols))
+    const makeCells= (rows, cols) => {
+        let cells = [];
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                if (BOARD[y][x]) {
+                    cells[`${x}${y}`] = true
+                }
+            }
+        }
+        return cells;
+    }
+    let [cells, setCells] = useState([])
 
     const handleClick = (event) => {
         const elemOffset = getElementOffset(boardRef);
@@ -168,40 +153,40 @@ const Grid = ({}) => {
     }
     
     const handleClear = () => {
-            BOARD = makeEmptyBoard(rows, cols);
-            setCells(makeCells(rows, cols))
-        }
+        BOARD = makeEmptyBoard(rows, cols);
+        setCells(makeCells(rows, cols))
+    }
     
     const handleRandom = () => {
-            for (let y = 0; y < rows; y++) {
-                for (let x = 0; x < cols; x++) {
-                    BOARD[y][x] = (Math.random() >= 0.5);
-                }
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                BOARD[y][x] = (Math.random() >= 0.5);
             }
-            setCells(makeCells(rows, cols))
         }
+        setCells(makeCells(rows, cols))
+    }
+    const handleResize = () => {
+        const height = (window.innerHeight - 70) //APPBAR HEIGHT - caluclate dynamically using offsetHeight
+        setSize(height / CELL_SIZE | 0)
+    }
 
         const buttonClass = "m-1 text-center bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500\
                 items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white\
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500\
                 "
-
+window.board = BOARD
         return (
             <main className="min-w-0 flex-1 border-t border-gray-200 lg:flex">
             <section className="min-w-0 flex-1 h-full flex flex-col overflow-hidden lg:order-last">
           <div className="Board"
-                    style={{ width: WIDTH, height: HEIGHT, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`}}
+                    style={{ width: size * CELL_SIZE, height: size * CELL_SIZE, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`}}
                     onClick={handleClick}
                     ref={boardRef}>
-                    <CSSTransitionGroup
-                        transitionName="example"
-                        transitionEnterTimeout={speed * 2}
-                        transitionLeaveTimeout={speed}>
-                            {cells.map(cell => (
-                                        <Cell x={cell.x} y={cell.y} key={`${cell.x},${cell.y}`}/>
-                                    ))}
-                        </CSSTransitionGroup>
-          
+                        {BOARD.map((row, i) => (
+                            row.map((col, j) => {
+                                return <Cell speed={speed * 3} filled={cells[`${i}${j}`]} x={i} y={j} key={`${i},${j}`}/>
+                            })
+                        ))}
                     </div>
         </section>
              
@@ -220,7 +205,7 @@ const Grid = ({}) => {
                     }
                     <button className={buttonClass} onClick={handleRandom}>Randomise</button>
                     <button className={buttonClass} onClick={handleClear}>Clear Board</button>
-                    <button className={buttonClass} onClick={handleClear}>Resize to Fit</button>
+                    <button className={buttonClass} onClick={handleResize}>Resize to Fit</button>
                 </div>
         </aside>
         </main>

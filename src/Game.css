@@ -3,8 +3,17 @@
     background-color: #000;
 }
 
-.Cell {
+.cell:hover, .empty:hover {
+    border: 1px solid pink;
+}
+
+.cell {
     background: #ccc;
+    position: absolute;
+}
+
+.empty {
+    background: black;
     position: absolute;
 }
 
