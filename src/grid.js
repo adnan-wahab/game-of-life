@@ -73,16 +73,16 @@ const getElementOffset = (boardRef) => {
   };
 };
 
+
+
 const Grid = ({}) => {
-    let [dragging, setDragging] = useState(false)
   let boardRef = useRef(null);
 
   let [isRunning, setRunning] = useState(false),
     [speed, setSpeed] = useState(100),
-    [size, setSize] = useState(30);
+    [rows, setRows] = useState(30),
+    [cols, setColumns] = useState(30);
 
-  const rows = size,
-    cols = size;
   BOARD = BOARD || makeEmptyBoard(rows, cols);
 
   useEffect(() => {
@@ -162,9 +162,13 @@ const Grid = ({}) => {
     setSpeed(event.target.value);
   };
 
-  const handleSizeChange = (event) => {
-    setSize(event.target.value);
+  const handleColumnChange = (event) => {
+    setColumns(event.target.value);
   };
+  const handleRowChange = (event) => {
+    setRows(event.target.value);
+  };
+
 
   const handleClear = () => {
     BOARD = makeEmptyBoard(rows, cols);
@@ -181,7 +185,9 @@ const Grid = ({}) => {
   };
   const handleResize = () => {
     const height = window.innerHeight - 55; //APPBAR HEIGHT - caluclate dynamically using offsetHeight
-    setSize((height / CELL_SIZE) | 0);
+    setRows((height / CELL_SIZE) | 0);
+    setColumns((window.innerWidth / CELL_SIZE) | 0);
+
   };
 
   const buttonClass =
@@ -196,8 +202,8 @@ const Grid = ({}) => {
         <div
           className="Board"
           style={{
-            width: size * CELL_SIZE,
-            height: size * CELL_SIZE,
+            width: cols * CELL_SIZE,
+            height: rows * CELL_SIZE,
           }}
           onClick={handleClick}
           onMouseMove={handleMouseMove}
@@ -229,9 +235,9 @@ const Grid = ({}) => {
 
             <input
               className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128"
-              type="range"
               min="10"
               max="1000"
+              type="range"
               value={speed}
               onChange={handleIntervalChange}
             />
@@ -242,18 +248,34 @@ const Grid = ({}) => {
             <div>
 
           <label className="block text-sm font-medium text-gray-700">
-            Size
+            rows
             </label>
             <div className="mt-1">
             <input
-              className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128"
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md" 
               min="10"
               max="150"
-              type="range"
-              value={size}
-              onChange={handleSizeChange}
+              type="number"
+              value={rows}
+              onChange={handleRowChange}
             />
-            {size}
+            </div>
+            </div>
+
+            <div>
+
+          <label className="block text-sm font-medium text-gray-700">
+            Cols
+            </label>
+            <div className="mt-1">
+            <input
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block  sm:text-sm border-gray-300 rounded-md" 
+              min="10"
+              max="150"
+              type="number"
+              value={cols}
+              onChange={handleColumnChange}
+            />
             </div>
             </div>
 
@@ -281,5 +303,6 @@ const Grid = ({}) => {
     </main>
   );
 };
+
 
 export default Grid;
