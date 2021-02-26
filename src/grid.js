@@ -28,7 +28,7 @@ const Grid = ({
     <main className="min-w-0 flex-1 border-t border-gray-200 lg:flex">
       <section className="min-w-0 flex-1 h-full flex flex-col lg:order-last">
         <div
-          className="Board"
+          className="Board m-auto"
           style={{
             width: cols * cell_size,
             height: rows * cell_size,

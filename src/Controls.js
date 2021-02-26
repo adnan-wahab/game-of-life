@@ -22,7 +22,7 @@ const Controls = ({
     <div className="mt-4 flex md:mt-0 md:ml-4 text-white">
       {isRunning ? (
         <button className={buttonClass} onClick={stopGame}>
-          Pause
+          Pause ⏸︎
         </button>
       ) : (
         <button className={buttonClass} onClick={runGame}>
@@ -40,7 +40,7 @@ const Controls = ({
       </button>
 
       <div className="px-5">
-        <label className="block text-sm font-medium">rows</label>
+        <label className="block text-sm font-medium">Rows</label>
         <div className="mt-1">
           <input
             className="text-black shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md"
