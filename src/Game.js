@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import Controls from './Controls'
-import Grid from './Grid'
+import Controls from "./Controls";
+import Grid from "./Grid";
 
 import "./Game.css";
 
 let BOARD;
 let TIMEOUT;
 const CELL_SIZE = 20;
-
-
 
 const makeEmptyBoard = (cols, rows) => {
   let board = [];
@@ -18,7 +16,6 @@ const makeEmptyBoard = (cols, rows) => {
       board[y][x] = false;
     }
   }
-
   return board;
 };
 
@@ -63,8 +60,6 @@ const getElementOffset = (boardRef) => {
   };
 };
 
-
-
 const Game = ({}) => {
   let boardRef = useRef(null);
 
@@ -74,7 +69,7 @@ const Game = ({}) => {
     [cols, setColumns] = useState(30);
 
   BOARD = BOARD || makeEmptyBoard(rows, cols);
-  window.board = BOARD
+  window.board = BOARD;
   useEffect(() => {
     BOARD = makeEmptyBoard(rows, cols);
   }, [cols, rows]);
@@ -92,7 +87,6 @@ const Game = ({}) => {
   };
   let [cells, setCells] = useState([]);
 
-
   const toggleCells = (event) => {
     const elemOffset = getElementOffset(boardRef);
     const offsetX = event.clientX - elemOffset.x;
@@ -105,15 +99,13 @@ const Game = ({}) => {
       BOARD[y][x] = !BOARD[y][x];
     }
     setCells(makeCells(rows, cols));
-
-  }
+  };
   const handleMouseMove = (event) => {
-    if (event.shiftKey) toggleCells(event)
-  }
-
+    if (event.shiftKey) toggleCells(event);
+  };
 
   const handleClick = (event) => {
-    toggleCells(event)
+    toggleCells(event);
   };
 
   const runGame = () => {
@@ -136,9 +128,9 @@ const Game = ({}) => {
       for (let x = 0; x < cols; x++) {
         let neighbors = calculateNeighbors(BOARD, x, y, rows, cols);
         if (BOARD[y][x]) {
-            newBoard[y][x] = neighbors === 2 || neighbors === 3
+          newBoard[y][x] = neighbors === 2 || neighbors === 3;
         } else {
-            newBoard[y][x] = !BOARD[y][x] && neighbors === 3
+          newBoard[y][x] = !BOARD[y][x] && neighbors === 3;
         }
       }
     }
@@ -159,7 +151,6 @@ const Game = ({}) => {
     setRows(event.target.value);
   };
 
-
   const handleClear = () => {
     BOARD = makeEmptyBoard(rows, cols);
     setCells(makeCells(rows, cols));
@@ -178,54 +169,52 @@ const Game = ({}) => {
     const height = window.innerHeight - 55; //TODO - calculate dynamically using offsetHeight
     setRows((height / CELL_SIZE) | 0);
     setColumns((window.innerWidth / CELL_SIZE) | 0);
-
   };
 
-let controlProps = {
-  speed,
-  handleIntervalChange,
-  rows,
-  handleRowChange,
-  cols,
-  handleColumnChange,
-  isRunning,
-  stopGame,
-  runGame,
-  handleRandom,
-  handleClear,
-  handleResize,
-}
+  let controlProps = {
+    speed,
+    handleIntervalChange,
+    rows,
+    handleRowChange,
+    cols,
+    handleColumnChange,
+    isRunning,
+    stopGame,
+    runGame,
+    handleRandom,
+    handleClear,
+    handleResize,
+  };
 
-const gridProps = {
-  handleClick,
-  handleMouseMove,
-  board:BOARD,
-  boardRef,
-  cols,
-  rows,
-  speed,
-  cells,
-  cell_size: CELL_SIZE
-}
+  const gridProps = {
+    handleClick,
+    handleMouseMove,
+    board: BOARD,
+    boardRef,
+    cols,
+    rows,
+    speed,
+    cells,
+    cell_size: CELL_SIZE,
+  };
 
   return (
     <div className="bg-gray-100 shadow h-full">
-    <nav className="bg-gradient-to-r from-light-blue-800 to-cyan-600 px-2 sm:px-6">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-        <div className="relative flex items-center justify-between h-16">
-          <div className="flex items-center px-2 lg:px-0">
-            <div className="flex-shrink-0 text-white">
-              Conway's Game of Life
+      <nav className="bg-gradient-to-r from-light-blue-800 to-cyan-600 px-2 sm:px-6">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+          <div className="relative flex items-center justify-between h-16">
+            <div className="flex items-center px-2 lg:px-0">
+              <div className="flex-shrink-0 text-white">
+                Conway's Game of Life
+              </div>
+              <Controls {...controlProps}></Controls>
             </div>
-            <Controls {...controlProps}></Controls>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
       <Grid {...gridProps}></Grid>
-  </div>
+    </div>
   );
 };
-
 
 export default Game;
