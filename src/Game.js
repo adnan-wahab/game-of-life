@@ -168,13 +168,14 @@ const Game = ({}) => {
   const handleRandom = () => {
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
-        BOARD[y][x] = Math.random() >= 0.5;
+        BOARD[y][x] = Math.random() >= 0.4;
       }
     }
     setCells(makeCells(rows, cols));
   };
+
   const handleResize = () => {
-    const height = window.innerHeight - 55; //APPBAR HEIGHT - caluclate dynamically using offsetHeight
+    const height = window.innerHeight - 55; //TODO - calculate dynamically using offsetHeight
     setRows((height / CELL_SIZE) | 0);
     setColumns((window.innerWidth / CELL_SIZE) | 0);
 
