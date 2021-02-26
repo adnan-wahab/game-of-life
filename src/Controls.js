@@ -19,7 +19,7 @@ const Controls = ({
   handleResize,
 }) => {
   return (
-    <div className="mt-4 flex md:mt-0 md:ml-4 text-white">
+    <div className="flex mt-0 ml-16 text-white">
       {isRunning ? (
         <button className={buttonClass} onClick={stopGame}>
           Pause ⏸︎
