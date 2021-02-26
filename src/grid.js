@@ -1,308 +1,59 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./Game.css";
 
-const CELL_SIZE = 20;
-let BOARD;
-let TIMEOUT;
 
-const Cell = ({ x, y, filled, speed }) => {
-  return (
+const Cell = ({ x, y, filled, speed, cell_size}) => {
+    return (
+      <div
+        className={(filled ? "cell" : "empty") + " transition"}
+        style={{
+          left: `${cell_size * x + 1}px`,
+          top: `${cell_size * y + 1}px`,
+          width: `${cell_size - 1}px`,
+          height: `${cell_size - 1}px`,
+          transitionDuration: speed + "ms",
+        }}
+      />
+    );
+  };
+
+const Grid = ({
+    handleClick,
+    handleMouseMove,
+    board,
+    boardRef,
+    cols,
+    rows,
+    speed,
+    cells,
+    cell_size,
+}) => {
+    return (<main className="min-w-0 flex-1 border-t border-gray-200 lg:flex">
+  <section className="min-w-0 flex-1 h-full flex flex-col lg:order-last">
     <div
-      className={(filled ? "cell" : "empty") + " transition"}
+      className="Board"
       style={{
-        left: `${CELL_SIZE * x + 1}px`,
-        top: `${CELL_SIZE * y + 1}px`,
-        width: `${CELL_SIZE - 1}px`,
-        height: `${CELL_SIZE - 1}px`,
-        transitionDuration: speed + "ms",
+        width: cols * cell_size,
+        height: rows * cell_size,
       }}
-    />
-  );
-};
-
-const makeEmptyBoard = (rows, cols) => {
-  let board = [];
-  for (let y = 0; y < rows; y++) {
-    board[y] = [];
-    for (let x = 0; x < cols; x++) {
-      board[y][x] = false;
-    }
-  }
-
-  return board;
-};
-
-const calculateNeighbors = (board, x, y, rows, cols) => {
-  let neighbors = 0;
-
-  const dirs = [
-    [-1, -1],
-    [-1, 0],
-    [-1, 1],
-    [0, 1],
-    [1, 1],
-    [1, 0],
-    [1, -1],
-    [0, -1],
-  ];
-  for (let i = 0; i < dirs.length; i++) {
-    const dir = dirs[i];
-    let y1 = y + dir[0];
-    let x1 = x + dir[1];
-
-    if (x1 < 0) x1 = cols - 1;
-    if (y1 < 0) y1 = rows - 1;
-    // if (x1 < 0) continue
-    // if (y1 < 0) continue
-
-    if (x1 < cols && y1 < rows && board[y1][x1]) {
-      neighbors++;
-    }
-  }
-
-  return neighbors;
-};
-
-const getElementOffset = (boardRef) => {
-  const rect = boardRef.current.getBoundingClientRect();
-  const doc = document.documentElement;
-
-  return {
-    x: rect.left + window.pageXOffset - doc.clientLeft,
-    y: rect.top + window.pageYOffset - doc.clientTop,
-  };
-};
-
-
-
-const Grid = ({}) => {
-  let boardRef = useRef(null);
-
-  let [isRunning, setRunning] = useState(false),
-    [speed, setSpeed] = useState(100),
-    [rows, setRows] = useState(30),
-    [cols, setColumns] = useState(30);
-
-  BOARD = BOARD || makeEmptyBoard(rows, cols);
-
-  useEffect(() => {
-    BOARD = makeEmptyBoard(rows, cols);
-  }, [cols, rows]);
-
-  const makeCells = (rows, cols) => {
-    let cells = [];
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        if (BOARD[y][x]) {
-          cells[`${x},${y}`] = true;
-        }
-      }
-    }
-    return cells;
-  };
-  let [cells, setCells] = useState([]);
-
-
-  const toggleCells = (event) => {
-    const elemOffset = getElementOffset(boardRef);
-    const offsetX = event.clientX - elemOffset.x;
-    const offsetY = event.clientY - elemOffset.y;
-
-    const x = Math.floor(offsetX / CELL_SIZE);
-    const y = Math.floor(offsetY / CELL_SIZE);
-
-    if (x >= 0 && x <= cols && y >= 0 && y <= rows) {
-      BOARD[y][x] = !BOARD[y][x];
-    }
-    setCells(makeCells(rows, cols));
-
-  }
-  const handleMouseMove = (event) => {
-    if (event.shiftKey) toggleCells(event)
-  }
-
-
-  const handleClick = (event) => {
-    toggleCells(event)
-  };
-
-  const runGame = () => {
-    setRunning(true);
-    runIteration();
-  };
-
-  const stopGame = () => {
-    setRunning(false);
-    if (TIMEOUT) {
-      window.clearTimeout(TIMEOUT);
-      TIMEOUT = void 0;
-    }
-  };
-
-  const runIteration = () => {
-    let newBoard = makeEmptyBoard(rows, cols);
-
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        let neighbors = calculateNeighbors(BOARD, x, y, rows, cols);
-        if (BOARD[y][x]) {
-            newBoard[y][x] = neighbors === 2 || neighbors === 3
-        } else {
-            newBoard[y][x] = !BOARD[y][x] && neighbors === 3
-        }
-      }
-    }
-
-    BOARD = newBoard;
-    setCells(makeCells(rows, cols));
-    TIMEOUT = window.setTimeout(runIteration, speed);
-  };
-
-  const handleIntervalChange = (event) => {
-    setSpeed(event.target.value);
-  };
-
-  const handleColumnChange = (event) => {
-    setColumns(event.target.value);
-  };
-  const handleRowChange = (event) => {
-    setRows(event.target.value);
-  };
-
-
-  const handleClear = () => {
-    BOARD = makeEmptyBoard(rows, cols);
-    setCells(makeCells(rows, cols));
-  };
-
-  const handleRandom = () => {
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        BOARD[y][x] = Math.random() >= 0.5;
-      }
-    }
-    setCells(makeCells(rows, cols));
-  };
-  const handleResize = () => {
-    const height = window.innerHeight - 55; //APPBAR HEIGHT - caluclate dynamically using offsetHeight
-    setRows((height / CELL_SIZE) | 0);
-    setColumns((window.innerWidth / CELL_SIZE) | 0);
-
-  };
-
-  const buttonClass =
-    "m-1 text-center bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500\
-                items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white\
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500\
-                ";
-  window.board = BOARD;
-  return (
-    <main className="min-w-0 flex-1 border-t border-gray-200 lg:flex">
-      <section className="min-w-0 flex-1 h-full flex flex-col overflow-hidden lg:order-last">
-        <div
-          className="Board"
-          style={{
-            width: cols * CELL_SIZE,
-            height: rows * CELL_SIZE,
-          }}
-          onClick={handleClick}
-          onMouseMove={handleMouseMove}
-          ref={boardRef}
-        >
-          {BOARD.map((row, i) =>
-            row.map((col, j) => {
-              return (
-                <Cell
-                  speed={speed * 3}
-                  filled={cells[`${i},${j}`]}
-                  x={i}
-                  y={j}
-                  key={`${i},${j}`}
-                />
-              );
-            })
-          )}
-        </div>
-      </section>
-
-      <aside className="lg:block lg:flex-shrink-0 lg:order-first">
-        <div className="h-full relative flex flex-col w-96 border-r border-gray-200 bg-gray-100 p-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Speed
-            </label>
-            <div className="mt-1">
-
-            <input
-              className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128"
-              min="10"
-              max="1000"
-              type="range"
-              value={speed}
-              onChange={handleIntervalChange}
+      onClick={handleClick}
+      onMouseMove={handleMouseMove}
+      ref={boardRef}
+    >
+      {board.map((row, i) =>
+        row.map((_, j) => {
+          return (
+            <Cell
+              cell_size={cell_size}
+              speed={speed * 3}
+              filled={cells[`${i},${j}`]}
+              x={i}
+              y={j}
+              key={`${i},${j}`}
             />
-            {" " + speed}ms
-            </div>
-            </div>
-
-            <div>
-
-          <label className="block text-sm font-medium text-gray-700">
-            rows
-            </label>
-            <div className="mt-1">
-            <input
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md" 
-              min="10"
-              max="150"
-              type="number"
-              value={rows}
-              onChange={handleRowChange}
-            />
-            </div>
-            </div>
-
-            <div>
-
-          <label className="block text-sm font-medium text-gray-700">
-            Cols
-            </label>
-            <div className="mt-1">
-            <input
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block  sm:text-sm border-gray-300 rounded-md" 
-              min="10"
-              max="150"
-              type="number"
-              value={cols}
-              onChange={handleColumnChange}
-            />
-            </div>
-            </div>
-
-
-          {isRunning ? (
-            <button className={buttonClass} onClick={stopGame}>
-              Pause
-            </button>
-          ) : (
-            <button className={buttonClass} onClick={runGame}>
-              Play
-            </button>
-          )}
-          <button className={buttonClass} onClick={handleRandom}>
-            Randomise
-          </button>
-          <button className={buttonClass} onClick={handleClear}>
-            Clear Board
-          </button>
-          <button className={buttonClass} onClick={handleResize}>
-            Resize to Fit
-          </button>
-        </div>
-      </aside>
-    </main>
-  );
-};
-
-
-export default Grid;
+          );
+        })
+      )}
+    </div>
+  </section>
+</main>)    
+}
+export default Grid
