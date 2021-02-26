@@ -19,7 +19,7 @@ const Controls = ({
   handleResize,
 }) => {
   return (
-    <div className="flex mt-0 ml-16 text-white">
+    <div className="flex mt-0 ml-20 text-white">
       {isRunning ? (
         <button className={buttonClass} onClick={stopGame}>
           Pause ⏸︎
@@ -43,7 +43,7 @@ const Controls = ({
         <label className="block text-sm font-medium">Rows</label>
         <div className="mt-1">
           <input
-            className="text-black shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md"
+            className="text-black shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300"
             min="10"
             max="150"
             type="number"
@@ -57,7 +57,7 @@ const Controls = ({
         <label className="block text-sm font-medium">Cols</label>
         <div className="mt-1">
           <input
-            className=" text-black shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block  sm:text-sm border-gray-300 rounded-md"
+            className=" text-black shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block  sm:text-sm border-gray-300"
             min="10"
             max="150"
             type="number"
