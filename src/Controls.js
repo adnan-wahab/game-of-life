@@ -1,8 +1,8 @@
 const buttonClass =
-  "m-1 text-center bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500\
-            items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white\
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500\
-            ";
+  `mx-1 relative inline-flex items-center 
+  px-2 py-1 border border-gray-300 text-sm font-medium 
+  rounded text-gray-700 bg-gray-50 hover:bg-gray-100 
+  focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500`;
 
 const Controls = ({
   speed,
@@ -26,17 +26,17 @@ const Controls = ({
         </button>
       ) : (
         <button className={buttonClass} onClick={runGame}>
-          Play
+          Play &#9658;
         </button>
       )}
       <button className={buttonClass} onClick={handleRandom}>
         Randomise
       </button>
       <button className={buttonClass} onClick={handleClear}>
-        Clear Board
+        Clear
       </button>
       <button className={buttonClass} onClick={handleResize}>
-        Resize to Fit
+        Resize
       </button>
 
       <div className="px-5">

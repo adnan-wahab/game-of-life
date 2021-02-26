@@ -199,7 +199,7 @@ const Game = ({}) => {
   };
 
   return (
-    <div className="bg-gray-100 shadow h-full">
+    <div className="bg-gray-100 shadow h-auto">
       <nav className="bg-gradient-to-r from-light-blue-800 to-cyan-600 px-2 sm:px-6">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
